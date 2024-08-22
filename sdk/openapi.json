@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Shippex Test Task APIs",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://shippex-demo.bc.brandimic.com"
+    }
+  ],
+  "paths": {
+    "/api/method/login": {
+      "post": {
+        "tags": [
+          "default"
+        ],
+        "summary": "Login",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "usr": {
+                    "type": "string",
+                    "example": "test@brandimic.com"
+                  },
+                  "pwd": {
+                    "type": "string",
+                    "example": "testy123@"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/method/frappe.client.get_list": {
+      "get": {
+        "tags": [
+          "default"
+        ],
+        "summary": "Shipment List",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}
