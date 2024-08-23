@@ -8,13 +8,14 @@ import { Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { classNames } from "@/utils/style";
 import { router } from "expo-router";
+import { FocusAwareStatusBar } from "@/components/FocusAwareStatusBar";
 
 export default function Landing() {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar backgroundColor="#2F50C1" />
+      <FocusAwareStatusBar backgroundColor="#2F50C1" />
       <View className="bg-app-blue flex-1 p-5">
         <View className="flex-1 border- items-center justify-center">
           <Image
