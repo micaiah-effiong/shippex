@@ -20,7 +20,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         // headerShown: false,
-        tabBarStyle: classNames.style("py-3 h-16 bg-white"),
+        tabBarStyle: classNames.style("py-3 h-16 bg-white border-t-0"),
         headerStyle: classNames.style("bg-white"),
         headerShadowVisible: false,
         headerTitleAlign: "center",
