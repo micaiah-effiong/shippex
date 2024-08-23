@@ -10,6 +10,9 @@ module.exports = {
     extend: {
       colors: {
         "app-blue": "#2F50C1",
+        "app-gray": "#757281",
+        "app-light-gray": "#F4F2F8",
+        "app-gray-200": "#A7A3B3",
       },
       fontFamily: {
         SFProTextBlack: ["SF-Pro-Text-Black"],

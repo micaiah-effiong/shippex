@@ -6,10 +6,12 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { PaperProvider, useTheme, configureFonts } from "react-native-paper";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -45,17 +47,108 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  const theme = useTheme();
+
   if (!loaded) {
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <PaperProvider theme={{ ...theme, fonts }}>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </PaperProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
+
+const baseFont = {
+  fontFamily: "SF-Pro-Text-Regular",
+} as const;
+
+const baseVariants = configureFonts({ config: baseFont });
+
+// Then, define custom fonts for different variants
+
+const sfProText = {
+  regular: {
+    fontFamily: "SF-Pro-Text-Regular",
+    fontWeight: "normal",
+  },
+  italic: {
+    fontFamily: "SF-Pro-Text-RegularItalic",
+    fontWeight: "normal",
+  },
+  medium: {
+    fontFamily: "SF-Pro-Text-Medium",
+    fontWeight: "normal",
+  },
+  mediumItalic: {
+    fontFamily: "SF-Pro-Text-MediumItalic",
+    fontWeight: "normal",
+  },
+  light: {
+    fontFamily: "SF-Pro-Text-Light",
+    fontWeight: "normal",
+  },
+  lightItalic: {
+    fontFamily: "SF-Pro-Text-LightItalic",
+    fontWeight: "normal",
+  },
+  thin: {
+    fontFamily: "SF-Pro-Text-Thin",
+    fontWeight: "normal",
+  },
+  thinItalic: {
+    fontFamily: "SF-Pro-Text-ThinItalic",
+    fontWeight: "normal",
+  },
+  ultralight: {
+    fontFamily: "SF-Pro-Text-Ultralight",
+    fontWeight: "normal",
+  },
+  ultralightItalic: {
+    fontFamily: "SF-Pro-Text-UltralightItalic",
+    fontWeight: "normal",
+  },
+  bold: {
+    fontFamily: "SF-Pro-Text-Bold",
+    fontWeight: "bold",
+  },
+  boldItalic: {
+    fontFamily: "SF-Pro-Text-BoldItalic",
+    fontWeight: "bold",
+  },
+  heavy: {
+    fontFamily: "SF-Pro-Text-Heavy",
+    fontWeight: "bold",
+  },
+  heavyItalic: {
+    fontFamily: "SF-Pro-Text-HeavyItalic",
+    fontWeight: "bold",
+  },
+  semibold: {
+    fontFamily: "SF-Pro-Text-Semibold",
+    fontWeight: "bold",
+  },
+  semiboldItalic: {
+    fontFamily: "SF-Pro-Text-SemiboldItalic",
+    fontWeight: "bold",
+  },
+};
+
+// Finally, merge base variants with your custom tokens
+// and apply custom fonts to your theme.
+
+const fonts = configureFonts({
+  config: {
+    ...baseVariants,
+    ...sfProText,
+  },
+});
