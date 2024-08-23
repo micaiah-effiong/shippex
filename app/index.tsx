@@ -1,14 +1,20 @@
 import { Entypo } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { StatusBar } from "expo-status-bar";
 import { StyledComponent } from "nativewind";
 import { useRef } from "react";
-import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  Keyboard,
+} from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { classNames } from "@/utils/style";
 import { router } from "expo-router";
 import { FocusAwareStatusBar } from "@/components/FocusAwareStatusBar";
+import { ShipeexLogoWhite } from "@/components/Shippex-logo";
 
 export default function Landing() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -18,10 +24,7 @@ export default function Landing() {
       <FocusAwareStatusBar backgroundColor="#2F50C1" />
       <View className="bg-app-blue flex-1 p-5">
         <View className="flex-1 border- items-center justify-center">
-          <Image
-            source={require("../assets/images/shippex-logo.png")}
-            className="w-30"
-          />
+          <ShipeexLogoWhite />
         </View>
         <View>
           <TouchableOpacity
@@ -35,6 +38,7 @@ export default function Landing() {
         </View>
 
         <BottomSheet
+          onClose={() => Keyboard.dismiss()}
           ref={bottomSheetRef}
           snapPoints={["95%"]}
           enablePanDownToClose
@@ -75,6 +79,7 @@ export default function Landing() {
                       keyboardType="email-address"
                       textContentType="emailAddress"
                       className="bg-app-light-gray text-app-blue text-base font-SFProTextRegular rounded-lg"
+                      contentStyle={classNames.style("text-app-blue")}
                       underlineStyle={classNames.style("hidden")}
                       mode="flat"
                     />
@@ -83,7 +88,10 @@ export default function Landing() {
                     <TextInput
                       label="Password"
                       secureTextEntry
-                      className="bg-app-light-gray text-app-blue text-base font-SFProTextRegular rounded-lg"
+                      className="bg-app-light-gray text-app-blue text-base font-SFProTextBold rounded-lg"
+                      contentStyle={classNames.style(
+                        "text-app-blue font-SFProTextBold",
+                      )}
                       underlineStyle={classNames.style("hidden")}
                       mode="flat"
                     />
