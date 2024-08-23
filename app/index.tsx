@@ -7,6 +7,7 @@ import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { classNames } from "@/utils/style";
+import { router } from "expo-router";
 
 export default function Landing() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -89,9 +90,11 @@ export default function Landing() {
                 </View>
                 <View className="mt-auto mb-6">
                   <Button
-                    className="bg-app-light-gray text-base  rounded-lg font-SFProTextBoldItalic"
+                    className="bg-app-light-gray text-base  rounded-lg"
                     labelStyle={classNames.style("py-2")}
-                    onPress={() => {}}
+                    onPress={() => {
+                      router.push("/(tabs)");
+                    }}
                   >
                     <Text className="font-SFProTextBold text-app-gray-200 text-base">
                       Login
