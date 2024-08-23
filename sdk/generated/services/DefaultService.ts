@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Filters } from '../models/Filters';
+import type { ListResponse } from '../models/ListResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -17,7 +19,11 @@ export class DefaultService {
       usr?: string;
       pwd?: string;
     },
-  ): CancelablePromise<any> {
+  ): CancelablePromise<{
+    message?: string;
+    home_page?: string;
+    full_name?: string;
+  }> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/method/login',
@@ -27,13 +33,22 @@ export class DefaultService {
   }
   /**
    * Shipment List
-   * @returns any Successful response
+   * @param requestBody
+   * @returns ListResponse Successful response
    * @throws ApiError
    */
-  public static getApiMethodFrappeClientGetList(): CancelablePromise<any> {
+  public static getApiMethodFrappeClientGetList(
+    requestBody?: {
+      doctype: string;
+      fields?: Array<string>;
+      filters?: Filters;
+    },
+  ): CancelablePromise<ListResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/method/frappe.client.get_list',
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
 }

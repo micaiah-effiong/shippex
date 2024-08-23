@@ -39,7 +39,22 @@
           "200": {
             "description": "Successful response",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "home_page": {
+                      "type": "string"
+                    },
+                    "full_name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -51,11 +66,752 @@
           "default"
         ],
         "summary": "Shipment List",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "doctype"
+                ],
+                "properties": {
+                  "doctype": {
+                    "type": "string",
+                    "example": "AWB"
+                  },
+                  "fields": {
+                    "example": [
+                      "*"
+                    ],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "filters": {
+                    "$ref": "#/components/schemas/Filters"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful response",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Filters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "creation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "modified": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "modified_by": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "owner": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "docstatus": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "idx": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sender": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_area": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_city": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sender_phone": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sender_name": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_adress_line_1": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_country": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sender_address": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_address_line2": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_state": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consignee": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_area": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_city": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consignee_phone": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consignee_name": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_address_line_1": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_country": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consignee_address": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_address_line_2": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_state": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_zone": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_zone": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "service": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total_weight": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "movable_units": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "amended_from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "company": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cod": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total_cod": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "barcode": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "branch": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "currency": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pieces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "not_available": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "percentage": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total_fees": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "awb_terms_template": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "awb_terms_and_conditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sales_invoice_created": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "_user_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "_comments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "_assign": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "_liked_by": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "geolocation_evkp": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shipping_service": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "delivery_time": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "from_client_side": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destination_branch": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_branch": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "delivery_due_date": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "company_currency": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exchange_rate": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "overdue": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "posting_date": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "posting_time": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "is_returned": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "custodian": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assignee": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "closed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "custodian_commission": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "awb_date": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin_address_line_1": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "service_type": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adjusted_cod": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ListResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "creation": {
+                "type": "string"
+              },
+              "modified": {
+                "type": "string"
+              },
+              "modified_by": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              },
+              "docstatus": {
+                "type": "number"
+              },
+              "idx": {
+                "type": "number"
+              },
+              "sender": {
+                "type": "string"
+              },
+              "origin_area": {
+                "type": "object",
+                "nullable": true
+              },
+              "origin_city": {
+                "type": "string"
+              },
+              "sender_phone": {
+                "type": "object",
+                "nullable": true
+              },
+              "sender_name": {
+                "type": "string"
+              },
+              "origin_adress_line_1": {
+                "type": "object",
+                "nullable": true
+              },
+              "origin_country": {
+                "type": "string"
+              },
+              "sender_address": {
+                "type": "object",
+                "nullable": true
+              },
+              "origin_address_line2": {
+                "type": "object",
+                "nullable": true
+              },
+              "origin_state": {
+                "type": "string"
+              },
+              "consignee": {
+                "type": "string"
+              },
+              "destination_area": {
+                "type": "object",
+                "nullable": true
+              },
+              "destination_city": {
+                "type": "string"
+              },
+              "consignee_phone": {
+                "type": "object",
+                "nullable": true
+              },
+              "consignee_name": {
+                "type": "object",
+                "nullable": true
+              },
+              "destination_address_line_1": {
+                "type": "object",
+                "nullable": true
+              },
+              "destination_country": {
+                "type": "string"
+              },
+              "consignee_address": {
+                "type": "object",
+                "nullable": true
+              },
+              "destination_address_line_2": {
+                "type": "object",
+                "nullable": true
+              },
+              "destination_state": {
+                "type": "string"
+              },
+              "origin_zone": {
+                "type": "string"
+              },
+              "destination_zone": {
+                "type": "string"
+              },
+              "service": {
+                "type": "object",
+                "nullable": true
+              },
+              "total_weight": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              },
+              "movable_units": {
+                "type": "object",
+                "nullable": true
+              },
+              "amended_from": {
+                "type": "object",
+                "nullable": true
+              },
+              "company": {
+                "type": "string"
+              },
+              "cod": {
+                "type": "number"
+              },
+              "total_cod": {
+                "type": "number"
+              },
+              "barcode": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "object",
+                "nullable": true
+              },
+              "currency": {
+                "type": "string"
+              },
+              "pieces": {
+                "type": "number"
+              },
+              "not_available": {
+                "type": "number"
+              },
+              "percentage": {
+                "type": "number"
+              },
+              "total_fees": {
+                "type": "number"
+              },
+              "awb_terms_template": {
+                "type": "object",
+                "nullable": true
+              },
+              "awb_terms_and_conditions": {
+                "type": "object",
+                "nullable": true
+              },
+              "sales_invoice_created": {
+                "type": "number"
+              },
+              "_user_tags": {
+                "type": "object",
+                "nullable": true
+              },
+              "_comments": {
+                "type": "object",
+                "nullable": true
+              },
+              "_assign": {
+                "type": "object",
+                "nullable": true
+              },
+              "_liked_by": {
+                "type": "object",
+                "nullable": true
+              },
+              "geolocation_evkp": {
+                "type": "object",
+                "nullable": true
+              },
+              "shipping_service": {
+                "type": "string"
+              },
+              "delivery_time": {
+                "type": "object",
+                "nullable": true
+              },
+              "from_client_side": {
+                "type": "number"
+              },
+              "destination_branch": {
+                "type": "object",
+                "nullable": true
+              },
+              "origin_branch": {
+                "type": "object",
+                "nullable": true
+              },
+              "delivery_due_date": {
+                "type": "object",
+                "nullable": true
+              },
+              "company_currency": {
+                "type": "string"
+              },
+              "exchange_rate": {
+                "type": "number"
+              },
+              "overdue": {
+                "type": "number"
+              },
+              "posting_date": {
+                "type": "string"
+              },
+              "posting_time": {
+                "type": "string"
+              },
+              "is_returned": {
+                "type": "number"
+              },
+              "custodian": {
+                "type": "object",
+                "nullable": true
+              },
+              "assignee": {
+                "type": "object",
+                "nullable": true
+              },
+              "closed": {
+                "type": "number"
+              },
+              "custodian_commission": {
+                "type": "number"
+              },
+              "awb_date": {
+                "type": "string"
+              },
+              "type": {
+                "type": "object",
+                "nullable": true
+              },
+              "origin_address_line_1": {
+                "type": "object",
+                "nullable": true
+              },
+              "service_type": {
+                "type": "object",
+                "nullable": true
+              },
+              "adjusted_cod": {
+                "type": "number"
+              }
             }
           }
         }
