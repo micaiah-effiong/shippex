@@ -15,8 +15,7 @@ export type ListResponse = {
     origin_area?: Record<string, any> | null;
     origin_city?: string;
     sender_phone?: Record<string, any> | null;
-    sender_name?: string;
-    origin_adress_line_1?: Record<string, any> | null;
+    sender_name?: string | null;
     origin_country?: string;
     sender_address?: Record<string, any> | null;
     origin_address_line2?: Record<string, any> | null;

@@ -15,7 +15,6 @@ export type Filters = {
   origin_city?: Array<string>;
   sender_phone?: Array<string>;
   sender_name?: Array<string>;
-  origin_adress_line_1?: Array<string>;
   origin_country?: Array<string>;
   sender_address?: Array<string>;
   origin_address_line2?: Array<string>;

@@ -202,12 +202,6 @@
               "type": "string"
             }
           },
-          "origin_adress_line_1": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "origin_country": {
             "type": "array",
             "items": {
@@ -614,10 +608,7 @@
                   "nullable": true
                 },
                 "sender_name": {
-                  "type": "string"
-                },
-                "origin_adress_line_1": {
-                  "type": "object",
+                  "type": "string",
                   "nullable": true
                 },
                 "origin_country": {
