@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ListResponse = {
-  message?: {
+  message?: Array<{
     name?: string;
     creation?: string;
     modified?: string;
@@ -77,6 +77,6 @@ export type ListResponse = {
     origin_address_line_1?: Record<string, any> | null;
     service_type?: Record<string, any> | null;
     adjusted_cod?: number;
-  };
+  }>;
 };
 

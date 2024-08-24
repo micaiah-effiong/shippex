@@ -10,12 +10,12 @@ import { request as __request } from '../core/request';
 export class DefaultService {
   /**
    * Login
-   * @param formData
+   * @param requestBody
    * @returns any Successful response
    * @throws ApiError
    */
   public static postApiMethodLogin(
-    formData?: {
+    requestBody?: {
       usr?: string;
       pwd?: string;
     },
@@ -27,8 +27,8 @@ export class DefaultService {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/method/login',
-      formData: formData,
-      mediaType: 'multipart/form-data',
+      body: requestBody,
+      mediaType: 'application/json',
     });
   }
   /**
@@ -37,15 +37,15 @@ export class DefaultService {
    * @returns ListResponse Successful response
    * @throws ApiError
    */
-  public static getApiMethodFrappeClientGetList(
+  public static postApiMethodFrappeClientGetList(
     requestBody?: {
       doctype: string;
       fields?: Array<string>;
-      filters?: Filters;
+      filters?: Filters | null;
     },
   ): CancelablePromise<ListResponse> {
     return __request(OpenAPI, {
-      method: 'GET',
+      method: 'POST',
       url: '/api/method/frappe.client.get_list',
       body: requestBody,
       mediaType: 'application/json',

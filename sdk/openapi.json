@@ -18,7 +18,7 @@
         "summary": "Login",
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -61,7 +61,12 @@
       }
     },
     "/api/method/frappe.client.get_list": {
-      "get": {
+      "post": {
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "tags": [
           "default"
         ],
@@ -89,6 +94,8 @@
                     }
                   },
                   "filters": {
+                    "type": "object",
+                    "nullable": true,
                     "$ref": "#/components/schemas/Filters"
                   }
                 }
@@ -112,6 +119,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "cookie"
+      }
+    },
     "schemas": {
       "Filters": {
         "type": "object",
@@ -560,257 +574,260 @@
         "type": "object",
         "properties": {
           "message": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "creation": {
-                "type": "string"
-              },
-              "modified": {
-                "type": "string"
-              },
-              "modified_by": {
-                "type": "string"
-              },
-              "owner": {
-                "type": "string"
-              },
-              "docstatus": {
-                "type": "number"
-              },
-              "idx": {
-                "type": "number"
-              },
-              "sender": {
-                "type": "string"
-              },
-              "origin_area": {
-                "type": "object",
-                "nullable": true
-              },
-              "origin_city": {
-                "type": "string"
-              },
-              "sender_phone": {
-                "type": "object",
-                "nullable": true
-              },
-              "sender_name": {
-                "type": "string"
-              },
-              "origin_adress_line_1": {
-                "type": "object",
-                "nullable": true
-              },
-              "origin_country": {
-                "type": "string"
-              },
-              "sender_address": {
-                "type": "object",
-                "nullable": true
-              },
-              "origin_address_line2": {
-                "type": "object",
-                "nullable": true
-              },
-              "origin_state": {
-                "type": "string"
-              },
-              "consignee": {
-                "type": "string"
-              },
-              "destination_area": {
-                "type": "object",
-                "nullable": true
-              },
-              "destination_city": {
-                "type": "string"
-              },
-              "consignee_phone": {
-                "type": "object",
-                "nullable": true
-              },
-              "consignee_name": {
-                "type": "object",
-                "nullable": true
-              },
-              "destination_address_line_1": {
-                "type": "object",
-                "nullable": true
-              },
-              "destination_country": {
-                "type": "string"
-              },
-              "consignee_address": {
-                "type": "object",
-                "nullable": true
-              },
-              "destination_address_line_2": {
-                "type": "object",
-                "nullable": true
-              },
-              "destination_state": {
-                "type": "string"
-              },
-              "origin_zone": {
-                "type": "string"
-              },
-              "destination_zone": {
-                "type": "string"
-              },
-              "service": {
-                "type": "object",
-                "nullable": true
-              },
-              "total_weight": {
-                "type": "number"
-              },
-              "status": {
-                "type": "string"
-              },
-              "movable_units": {
-                "type": "object",
-                "nullable": true
-              },
-              "amended_from": {
-                "type": "object",
-                "nullable": true
-              },
-              "company": {
-                "type": "string"
-              },
-              "cod": {
-                "type": "number"
-              },
-              "total_cod": {
-                "type": "number"
-              },
-              "barcode": {
-                "type": "string"
-              },
-              "branch": {
-                "type": "object",
-                "nullable": true
-              },
-              "currency": {
-                "type": "string"
-              },
-              "pieces": {
-                "type": "number"
-              },
-              "not_available": {
-                "type": "number"
-              },
-              "percentage": {
-                "type": "number"
-              },
-              "total_fees": {
-                "type": "number"
-              },
-              "awb_terms_template": {
-                "type": "object",
-                "nullable": true
-              },
-              "awb_terms_and_conditions": {
-                "type": "object",
-                "nullable": true
-              },
-              "sales_invoice_created": {
-                "type": "number"
-              },
-              "_user_tags": {
-                "type": "object",
-                "nullable": true
-              },
-              "_comments": {
-                "type": "object",
-                "nullable": true
-              },
-              "_assign": {
-                "type": "object",
-                "nullable": true
-              },
-              "_liked_by": {
-                "type": "object",
-                "nullable": true
-              },
-              "geolocation_evkp": {
-                "type": "object",
-                "nullable": true
-              },
-              "shipping_service": {
-                "type": "string"
-              },
-              "delivery_time": {
-                "type": "object",
-                "nullable": true
-              },
-              "from_client_side": {
-                "type": "number"
-              },
-              "destination_branch": {
-                "type": "object",
-                "nullable": true
-              },
-              "origin_branch": {
-                "type": "object",
-                "nullable": true
-              },
-              "delivery_due_date": {
-                "type": "object",
-                "nullable": true
-              },
-              "company_currency": {
-                "type": "string"
-              },
-              "exchange_rate": {
-                "type": "number"
-              },
-              "overdue": {
-                "type": "number"
-              },
-              "posting_date": {
-                "type": "string"
-              },
-              "posting_time": {
-                "type": "string"
-              },
-              "is_returned": {
-                "type": "number"
-              },
-              "custodian": {
-                "type": "object",
-                "nullable": true
-              },
-              "assignee": {
-                "type": "object",
-                "nullable": true
-              },
-              "closed": {
-                "type": "number"
-              },
-              "custodian_commission": {
-                "type": "number"
-              },
-              "awb_date": {
-                "type": "string"
-              },
-              "type": {
-                "type": "object",
-                "nullable": true
-              },
-              "origin_address_line_1": {
-                "type": "object",
-                "nullable": true
-              },
-              "service_type": {
-                "type": "object",
-                "nullable": true
-              },
-              "adjusted_cod": {
-                "type": "number"
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "creation": {
+                  "type": "string"
+                },
+                "modified": {
+                  "type": "string"
+                },
+                "modified_by": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "docstatus": {
+                  "type": "number"
+                },
+                "idx": {
+                  "type": "number"
+                },
+                "sender": {
+                  "type": "string"
+                },
+                "origin_area": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "origin_city": {
+                  "type": "string"
+                },
+                "sender_phone": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "sender_name": {
+                  "type": "string"
+                },
+                "origin_adress_line_1": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "origin_country": {
+                  "type": "string"
+                },
+                "sender_address": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "origin_address_line2": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "origin_state": {
+                  "type": "string"
+                },
+                "consignee": {
+                  "type": "string"
+                },
+                "destination_area": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "destination_city": {
+                  "type": "string"
+                },
+                "consignee_phone": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "consignee_name": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "destination_address_line_1": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "destination_country": {
+                  "type": "string"
+                },
+                "consignee_address": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "destination_address_line_2": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "destination_state": {
+                  "type": "string"
+                },
+                "origin_zone": {
+                  "type": "string"
+                },
+                "destination_zone": {
+                  "type": "string"
+                },
+                "service": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "total_weight": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "movable_units": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "amended_from": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "company": {
+                  "type": "string"
+                },
+                "cod": {
+                  "type": "number"
+                },
+                "total_cod": {
+                  "type": "number"
+                },
+                "barcode": {
+                  "type": "string"
+                },
+                "branch": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "pieces": {
+                  "type": "number"
+                },
+                "not_available": {
+                  "type": "number"
+                },
+                "percentage": {
+                  "type": "number"
+                },
+                "total_fees": {
+                  "type": "number"
+                },
+                "awb_terms_template": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "awb_terms_and_conditions": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "sales_invoice_created": {
+                  "type": "number"
+                },
+                "_user_tags": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "_comments": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "_assign": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "_liked_by": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "geolocation_evkp": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "shipping_service": {
+                  "type": "string"
+                },
+                "delivery_time": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "from_client_side": {
+                  "type": "number"
+                },
+                "destination_branch": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "origin_branch": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "delivery_due_date": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "company_currency": {
+                  "type": "string"
+                },
+                "exchange_rate": {
+                  "type": "number"
+                },
+                "overdue": {
+                  "type": "number"
+                },
+                "posting_date": {
+                  "type": "string"
+                },
+                "posting_time": {
+                  "type": "string"
+                },
+                "is_returned": {
+                  "type": "number"
+                },
+                "custodian": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "assignee": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "closed": {
+                  "type": "number"
+                },
+                "custodian_commission": {
+                  "type": "number"
+                },
+                "awb_date": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "origin_address_line_1": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "service_type": {
+                  "type": "object",
+                  "nullable": true
+                },
+                "adjusted_cod": {
+                  "type": "number"
+                }
               }
             }
           }
