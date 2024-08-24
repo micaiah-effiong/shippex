@@ -1,65 +1,55 @@
 import { Entypo } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { StyledComponent } from "nativewind";
-import { ReactElement, useRef } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  Keyboard,
-} from "react-native";
+import { useRef, useState } from "react";
+import { View, Text, Pressable, Keyboard } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { classNames } from "@/utils/style";
 import { FocusAwareStatusBar } from "@/components/FocusAwareStatusBar";
 import { ShipeexLogoWhite } from "@/components/Shippex-logo";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Control,
-  ControllerRenderProps,
-  FieldValues,
-  Path,
-  useController,
-  useForm,
-} from "react-hook-form";
-import { date, z } from "zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApiError } from "@/sdk/generated";
 import { apiConfig } from "@/sdk";
 import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/atoms";
+import LottieView from "lottie-react-native";
+import { ControlledInput } from "@/components/ControlledInput";
 
 type FormType = {
   usr: string | undefined;
   pwd: string | undefined;
 };
 
+const PASSWORD_LENGTH = 8;
+const loginSchema = z.object({
+  usr: z.string().email(),
+  pwd: z
+    .string()
+    .min(
+      PASSWORD_LENGTH,
+      `Password must contain at least ${PASSWORD_LENGTH} characters`,
+    ),
+});
+
 export default function Landing() {
+  const lottieAnimation = useRef<LottieView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [animationPlayed, setAnimationPlayed] = useState(false);
   const setUser = useSetAtom(userAtom);
 
   const loginMutation = useMutation({
     mutationKey: ["login-"],
     mutationFn: apiConfig.DefaultService.postApiMethodLogin,
-    // mutationFn: (data) =>
-    //   axios.post(
-    //     "https://shippex-demo.bc.brandimic.com/api/method/login",
-    //     data,
-    //   ),
-    onError(error) {
-      const e = error as ApiError;
-      console.log("error-", e);
-    },
-    onSuccess: (data, v, context) => {
+    onSuccess: (data) => {
       if (data.full_name) {
         setUser({ full_name: data.full_name });
       }
 
-      console.log("data", data);
-      console.log("context", context);
-      console.log("variable", v);
       router.replace("/(tabs)/");
     },
   });
@@ -71,6 +61,20 @@ export default function Landing() {
     loginMutation.mutate(data);
   };
 
+  if (!animationPlayed) {
+    return (
+      <StyledComponent
+        component={LottieView}
+        resizeMode="cover"
+        className="flex-1"
+        autoPlay
+        loop={false}
+        onAnimationFinish={() => setAnimationPlayed(true)}
+        ref={lottieAnimation}
+        source={require("../assets/lottie-amination.json")}
+      />
+    );
+  }
   return (
     <SafeAreaView className="flex-1">
       <FocusAwareStatusBar backgroundColor="#2F50C1" />
@@ -79,14 +83,14 @@ export default function Landing() {
           <ShipeexLogoWhite />
         </View>
         <View>
-          <TouchableOpacity
+          <Button
             onPress={() => bottomSheetRef.current?.expand()}
             className="bg-white py-3 rounded-md "
           >
             <Text className="text-center font-SFProTextBold text-app-blue">
               Login
             </Text>
-          </TouchableOpacity>
+          </Button>
         </View>
 
         <BottomSheet
@@ -126,7 +130,7 @@ export default function Landing() {
               <View className="flex-1">
                 <View className="space-y-3 mt-6 flex-1">
                   <View>
-                    <AuthInput
+                    <ControlledInput
                       name="usr"
                       control={form.control}
                       renderItem={(field) => {
@@ -156,7 +160,7 @@ export default function Landing() {
                     />
                   </View>
                   <View>
-                    <AuthInput
+                    <ControlledInput
                       name="pwd"
                       control={form.control}
                       renderItem={(field) => {
@@ -223,28 +227,3 @@ export default function Landing() {
     </SafeAreaView>
   );
 }
-
-function AuthInput<T extends FieldValues>(props: {
-  name: Path<T>;
-  control: Control<T>;
-  renderItem: (props: ControllerRenderProps<T, Path<T>>) => ReactElement;
-}) {
-  const { field } = useController({
-    control: props.control,
-    name: props.name,
-    // defaultValue: "",
-  });
-
-  return props.renderItem(field);
-}
-
-const PASSWORD_LENGTH = 8;
-const loginSchema = z.object({
-  usr: z.string().email(),
-  pwd: z
-    .string()
-    .min(
-      PASSWORD_LENGTH,
-      `Password must contain at least ${PASSWORD_LENGTH} characters`,
-    ),
-});
