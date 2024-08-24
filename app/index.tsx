@@ -1,7 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { StyledComponent } from "nativewind";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, Text, Pressable, Keyboard } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ApiError } from "@/sdk/generated";
 import { apiConfig } from "@/sdk";
 import { router } from "expo-router";
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { userAtom } from "@/atoms";
 import LottieView from "lottie-react-native";
 import { ControlledInput } from "@/components/ControlledInput";
@@ -40,7 +40,7 @@ export default function Landing() {
   const lottieAnimation = useRef<LottieView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [animationPlayed, setAnimationPlayed] = useState(false);
-  const setUser = useSetAtom(userAtom);
+  const [user, setUser] = useAtom(userAtom);
 
   const loginMutation = useMutation({
     mutationKey: ["login-"],
@@ -69,12 +69,19 @@ export default function Landing() {
         className="flex-1"
         autoPlay
         loop={false}
-        onAnimationFinish={() => setAnimationPlayed(true)}
+        onAnimationFinish={() => {
+          if (user) {
+            return router.replace("/(tabs)/");
+          }
+
+          setAnimationPlayed(true);
+        }}
         ref={lottieAnimation}
         source={require("../assets/lottie-amination.json")}
       />
     );
   }
+
   return (
     <SafeAreaView className="flex-1">
       <FocusAwareStatusBar backgroundColor="#2F50C1" />
