@@ -4,13 +4,71 @@ import { classNames } from "@/utils/style";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyledComponent } from "nativewind";
 import React from "react";
-import { ScrollView, View, Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, Text, RefreshControl } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Checkbox, TextInput } from "react-native-paper";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { apiConfig } from "@/sdk";
+import { Filters, ListResponse } from "@/sdk/generated";
+import { userAtom } from "@/atoms";
+import { useAtomValue } from "jotai";
+import { useDebouncedCallback } from "use-debounce";
+
+const defaultList: ListResponse["message"] = [];
+const LIST_QUERY_KEY = "get-list";
 
 export default function HomeScreen() {
   const [markAll, setMarkAll] = React.useState(false);
+  const qc = useQueryClient();
+  const searchRef = React.useRef<React.ElementRef<typeof TextInput>>(null);
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const currentUser = useAtomValue(userAtom);
+  const [search, setSearch] = React.useState("");
+  const searchFilter = React.useMemo(() => {
+    if (!search) {
+      return null;
+    }
+    return { name: ["like", `%${search}%`] } as Filters;
+  }, [search]);
+
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setSearch(value);
+  }, 1000);
+
+  const getListQuery = useQuery({
+    queryKey: [LIST_QUERY_KEY, search],
+    queryFn: () => {
+      return apiConfig.DefaultService.postApiMethodFrappeClientGetList({
+        doctype: "AWB",
+        fields: [
+          "name",
+          "sender",
+          "destination_address_line_1",
+          "destination_address_line_2",
+          "origin_adress_line_1",
+          "origin_address_line_1",
+          "origin_address_line2",
+        ],
+        filters: searchFilter,
+      });
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  const onRefresh = React.useCallback(() => {
+    qc.invalidateQueries({ queryKey: [LIST_QUERY_KEY] });
+  }, []);
+
+  const handleCloseBottomSheet = () => {
+    bottomSheetRef.current?.close();
+  };
+
   return (
     <View className="bg-white border- border-red-500 flex-1 pt- px-3 space-y-4">
       <FocusAwareStatusBar backgroundColor="#fff" />
@@ -22,8 +80,8 @@ export default function HomeScreen() {
           </Text>
         </View>
         <View>
-          <Text className="font-SFProTextBold text-2xl text-black/60">
-            Ibrahim Shaker
+          <Text className="font-SFProTextBold text-2xl text-black">
+            {currentUser?.full_name}
           </Text>
         </View>
       </View>
@@ -31,10 +89,12 @@ export default function HomeScreen() {
       <View className="space-y-3">
         <View>
           <TextInput
+            ref={searchRef as any}
             underlineStyle={classNames.style("hidden")}
-            className="text-base h-11 rounded-lg justify-center"
+            className="text-base h-11 rounded-lg justify-center bg-app-light-gray"
             mode="flat"
             placeholder="Search"
+            onChangeText={debouncedSearch}
             left={
               <TextInput.Icon
                 icon={() => (
@@ -50,12 +110,14 @@ export default function HomeScreen() {
             right={
               <TextInput.Icon
                 icon={() => (
-                  <StyledComponent
-                    component={Feather}
-                    name="x"
-                    size={24}
-                    className="text-app-gray-200"
-                  />
+                  <TouchableOpacity onPress={() => searchRef.current?.clear()}>
+                    <StyledComponent
+                      component={Feather}
+                      name="x"
+                      size={24}
+                      className="text-app-gray-200"
+                    />
+                  </TouchableOpacity>
                 )}
               />
             }
@@ -63,7 +125,7 @@ export default function HomeScreen() {
         </View>
         <View className="flex-row justify-between gap-3 ">
           <Button
-            onPress={() => {}}
+            onPress={handleCloseBottomSheet}
             className="dark:bg-app-light-gray bg-app-light-gray rounded-lg flex-1"
           >
             <Text>
@@ -74,7 +136,7 @@ export default function HomeScreen() {
               />
             </Text>{" "}
             <Text className="font-SFProTextRegular text-ritual-cyan-600">
-              Filter
+              Filters
             </Text>
           </Button>
           <Button className="dark:bg-app-light-gray rounded-lg flex-1 bg-app-blue">
@@ -100,31 +162,88 @@ export default function HomeScreen() {
             </View>
             <View className="flex-row items-center">
               <Checkbox
-            status={markAll ? "checked" : "unchecked"}
+                status={markAll ? "checked" : "unchecked"}
                 uncheckedColor={
                   classNames.style("text-app-light-gray-200").color as string
                 }
-                onPress={()=>setMarkAll(prev=>!prev)}
+                onPress={() => setMarkAll((prev) => !prev)}
               />
               <Text className="font-SFProTextRegular text-app-blue">
                 Mark all
               </Text>
             </View>
           </View>
-          <ScrollView className="space-y-4">
-            {Array.from({ length: 10 }).map((_, index) => {
-              return <ShipmentListItem key={index} />;
-            })}
-          </ScrollView>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={getListQuery.isLoading}
+                onRefresh={onRefresh}
+              />
+            }
+            data={getListQuery.data?.message || defaultList}
+            keyExtractor={(item) => item?.name as string}
+            renderItem={({ item }) => {
+              return (
+                <ShipmentListItem
+                  key={item.name}
+                  data={item}
+                  selectAll={markAll}
+                />
+              );
+            }}
+          />
         </View>
       </View>
+      <BottomSheet ref={bottomSheetRef} snapPoints={["45%"]} index={-1}>
+        <StyledComponent component={BottomSheetView} className=" flex-1">
+          <View className="flex-row justify-between border-b border-b-app-light-gray-200 px-3">
+            <Button onPress={handleCloseBottomSheet}>
+              <Text className="text- font-SFProTextRegular text-app-blue">
+                Cancel
+              </Text>
+            </Button>
+            <Button>
+              <Text className="font-SFProTextSemibold text-black">Filters</Text>
+            </Button>
+            <Button onPress={handleCloseBottomSheet}>
+              <Text className="text- font-SFProTextRegular text-app-blue">
+                Done
+              </Text>
+            </Button>
+          </View>
+
+          <View className="flex-1 p-3">
+            <View>
+              <Text className="uppercase font-SFProTextRegular">
+                shipment status
+              </Text>
+            </View>
+            <View className="justify-start flex-row flex-wrap py-2 flex-1">
+              <Chip label="Received" onPress={() => {}} />
+              <Chip label="Putaway" onPress={() => {}} />
+              <Chip label="Delivered" onPress={() => {}} />
+              <Chip label="Canceled" onPress={() => {}} />
+              <Chip label="Rejected" onPress={() => {}} />
+              <Chip label="Lost" onPress={() => {}} />
+              <Chip label="On Hold" onPress={() => {}} />
+            </View>
+          </View>
+        </StyledComponent>
+      </BottomSheet>
     </View>
   );
 }
 
-function ShipmentListItem() {
+function ShipmentListItem(props: {
+  data: Exclude<ListResponse["message"], undefined>[number];
+  selectAll?: boolean;
+}) {
   const [checked, setChecked] = React.useState(false);
   const [expand, setExpand] = React.useState(false);
+
+  React.useEffect(() => {
+    setChecked(Boolean(props.selectAll));
+  }, [props.selectAll]);
 
   return (
     <View className="bg-app-light-gray my-2 rounded-lg">
@@ -144,12 +263,18 @@ function ShipmentListItem() {
           </View>
           <View>
             <Text className="font-SFProTextRegular text-sm text-ritual-cyan-dark">
-              AWB
+              {props.data.sender}
             </Text>
-            <Text className="font-SFProTextSemibold text-lg">41785691423</Text>
+            <Text
+              className="font-SFProTextSemibold text-lg truncate"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {props.data.name}
+            </Text>
             <View className="flex-row items-center">
               <Text className="font-SFProTextRegular text-app-gray">
-                Cairo{" "}
+                {props.data.origin_city}{" "}
               </Text>
               <StyledComponent
                 component={MaterialCommunityIcons}
@@ -158,7 +283,7 @@ function ShipmentListItem() {
               />
               <Text className="font-SFProTextRegular text-app-gray">
                 {" "}
-                Alexandria
+                {props.data.destination_city}
               </Text>
             </View>
           </View>
@@ -186,16 +311,27 @@ function ShipmentListItem() {
           />
         </TouchableOpacity>
       </View>
-      <Details expand={expand} />
+      <Details expand={expand} data={props.data} />
     </View>
   );
 }
 
-function Details(props: { expand: boolean }) {
+function Details(props: {
+  expand: boolean;
+  data: Exclude<ListResponse["message"], undefined>[number];
+}) {
   if (!props.expand) {
     return null;
   }
 
+  const originAddress = (props.data.origin_adress_line_1 ||
+    props.data.origin_address_line_1 ||
+    props.data.origin_address_line2 ||
+    "N/A") as string;
+
+  const destinationAddress = (props.data.destination_address_line_1 ||
+    props.data.destination_address_line_2 ||
+    "N/A") as string;
   return (
     <View className="p-3 border-t-2 border-t-white border-dashed bg-[#f9f8fb] space-y-4">
       <View className="flex-row items-center justify-between">
@@ -206,11 +342,13 @@ function Details(props: { expand: boolean }) {
             </Text>
           </View>
           <View>
-            <Text className="text-base font-SFProTextRegular">Cairo</Text>
+            <Text className="text-base font-SFProTextRegular">
+              {props.data.origin_city}
+            </Text>
           </View>
           <View>
             <Text className="text-xs font-SFProTextLight text-ritual-cyan-600">
-              Dokki, 22 Nile St.
+              {originAddress}
             </Text>
           </View>
         </View>
@@ -229,11 +367,13 @@ function Details(props: { expand: boolean }) {
             </Text>
           </View>
           <View>
-            <Text className="text-base font-SFProTextRegular">Alexandria</Text>
+            <Text className="text-base font-SFProTextRegular">
+              {props.data.destination_city}
+            </Text>
           </View>
           <View>
             <Text className="text-xs font-SFProTextLight text-ritual-cyan-600">
-              Smoha, 22 max St.
+              {destinationAddress}
             </Text>
           </View>
         </View>
@@ -261,6 +401,27 @@ function Details(props: { expand: boolean }) {
           </Button>
         </View>
       </View>
+    </View>
+  );
+}
+
+function Chip(props: { label: string; onPress: (checked: boolean) => void }) {
+  const [checked, setChecked] = React.useState(false);
+
+  const handleChecked = () => {
+    props.onPress(!checked);
+    setChecked((prev) => !prev);
+  };
+
+  return (
+    <View
+      style={classNames.style("mr-3 mb-3", {
+        "border border-app-gray rounded-lg": checked,
+      })}
+    >
+      <Button className="bg-app-light-gray rounded-lg" onPress={handleChecked}>
+        <Text className="text-ritual-cyan-600">{props.label}</Text>
+      </Button>
     </View>
   );
 }
